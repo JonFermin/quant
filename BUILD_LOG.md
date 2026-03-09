@@ -19,3 +19,25 @@
 - Validation status:
   - `python3 -m py_compile strategies/lgbm_alpha158.py tests/test_config_validation.py` ✅
   - `python3 -m unittest ...` blocked in current runtime due missing runtime deps (`yaml`/pip unavailable).
+- Discovery pass (cron `quant-discovery-2h`, 08:10 UTC): refreshed `ROADMAP.md` with prioritized UX gaps, missing features, rough edges, tech-debt tasks, and growth ideas using P0–P3 + S/M/L/XL sizing.
+- Weekly strategy review (cron `quant-weekly-strategy-mon-9utc`, 09:12 UTC): full roadmap reprioritization completed.
+  - Shifted weekly focus to reliability gate + decision-grade reporting before new strategy breadth.
+  - Added strategic pivots and explicit success condition for the week in `ROADMAP.md`.
+  - Added owner-input decision items in `DECISIONS.md` (objective metric, realism assumptions, promotion thresholds, universe scope).
+- Discovery pass (cron `quant-discovery-2h`, 10:12 UTC): refreshed `ROADMAP.md` with a new prioritized backlog centered on:
+  - UX gaps: strict semantic date validation, `--dry-run` preflight, clearer error taxonomy.
+  - Missing features: consolidated evaluation report, cost-sensitivity presets, baseline comparisons, run index manifest.
+  - Tech debt: monolithic strategy-file split, broader test coverage, dependency pinning, lint/type CI.
+  - Growth ideas: experiment template, drift dashboard, multi-strategy scaffold, one-command tear sheet export.
+- Discovery pass (cron `quant-discovery-2h`, 12:14 UTC): refreshed `ROADMAP.md` after code-level review of runner/tests/config.
+  - Reprioritized P0 around semantic timeline validation, preflight mode, error taxonomy, recorder/artifact fallback, and ICIR zero-division safety.
+  - Tightened P1 on decision-grade reporting + run metadata/indexing and explicit experiment naming.
+  - Updated P2/P3 maintainability and growth tracks (module split, broader tests, pinned deps, CI gates, baseline pack, drift dashboard).
+- Discovery pass (cron `quant-discovery-2h`, 16:07 UTC): refreshed `ROADMAP.md` with latest reprioritization.
+  - Kept P0 focused on failure prevention: semantic timeline checks, `--dry-run`, typed errors, recorder resilience, metric safety guards.
+  - Expanded P1 decision stack: consolidated report, cost sensitivity presets, run manifest metadata, benchmark comparison, non-hardcoded run naming.
+  - Tightened P2/P3 on maintainability and growth: monolith split plan, CI/test expansion, dependency lock/repro docs, portability guardrails, drift/tear-sheet ideas.
+- Discovery pass (cron `quant-discovery-2h`, 18:04 UTC): refreshed `ROADMAP.md` after strategy-level code review.
+  - Reprioritized P0 to include explicit non-mutating overrides (`_apply_overrides` copy semantics) alongside semantic date validation, dry-run preflight, typed errors, recorder fallback, and ICIR NaN/inf safety.
+  - Tightened P1 around decision velocity: consolidated report, cost-sensitivity table, run manifest/index, benchmark block, and parameterized run naming.
+  - Refined P2/P3 maintainability/growth track: module split, expanded edge-case tests, dependency lock + CI gates, portability guards, drift notebook and tear-sheet follow-ons.

@@ -2,35 +2,57 @@
 
 Legend: Priority **P0–P3** (P0 highest), Complexity **S/M/L/XL**
 
-## Backlog
+Last discovery refresh: **2026-03-09 (cron `quant-discovery-2h`, 18:04 UTC)**
 
-- [x] **P0 · M** Add reproducible runner CLI (`python -m strategies.lgbm_alpha158` + args for config path, date overrides, output dir).
-  - Goal: one-command local/Colab execution with explicit artifacts.
+## Recommended Focus (next 48 hours)
 
-- [x] **P0 · M** Add validation + smoke tests for config/strategy wiring.
-  - Include checks for required config keys, date ranges, and provider URI sanity.
+**Theme:** Make runs fail early, degrade gracefully, and emit decision-ready outputs.
 
-- [ ] **P1 · M** Add evaluation report export (IC stats, Sharpe, max drawdown, turnover) to Markdown/CSV in `results/`.
+1. **Preflight + timeline guardrail**: semantic date checks and `--dry-run` env probe before expensive work.
+2. **Resilience path**: typed errors + partial artifact export when recorder objects are missing.
+3. **Decision pack + comparability**: one report, one run index, one naming scheme for clean run-to-run comparisons.
 
-- [ ] **P1 · M** Add notebook template for experiment tracking (`notebooks/02_experiment_template.ipynb`) with standardized sections.
+Success condition: a first-time operator can run preflight + one backtest and receive a clear pass/fail verdict, reproducibility metadata, and baseline-comparable metrics without reading strategy source.
 
-- [x] **P1 · S** Fix documentation drift in `CLAUDE.md` architecture tree (`example_lgbm.py` -> `lgbm_alpha158.py`).
+## Discovery Backlog (reprioritized)
 
-- [ ] **P1 · M** Add strategy hyperparameter surface notes + safe defaults in config comments.
+### P0 — UX Gaps + Reliability Risks
 
-- [ ] **P2 · M** Add optional walk-forward split presets (short/medium/long horizon) via config variants.
+- [ ] **P0 · M** Add semantic date-window validation (ISO parse, start<=end, train/valid/test ordering + non-overlap, backtest fully inside test segment, handler range coverage).
+- [ ] **P0 · M** Add `--dry-run` mode to validate imports/deps, provider path existence, output-dir writability, config shape, and optional qlib init probe without fitting.
+- [ ] **P0 · S** Add typed error taxonomy + exit codes (`ConfigError`, `EnvError`, `DataError`, `RuntimeError`) with concise remediation hints.
+- [ ] **P0 · S** Harden recorder/artifact path (`sig_analysis`, `portfolio_analysis`) to export partial results + explicit warnings instead of traceback-only failure.
+- [ ] **P0 · S** Fix metric safety edge cases: ICIR divide-by-zero guard and explicit `NaN/inf` handling in console + artifacts.
+- [ ] **P0 · S** Remove in-place mutation in `_apply_overrides` (copy config before applying overrides) to prevent hidden state coupling in tests and repeated runs.
 
-- [ ] **P2 · L** Add baseline strategy comparison (buy-and-hold SPY, equal-weight factor-neutral subset).
+### P1 — Missing Features for Decision Quality
 
-- [ ] **P2 · M** Add lint/format tooling (`ruff` + `black`) and CI workflow for checks.
+- [ ] **P1 · M** Produce consolidated run report (`results/report.md` + `report.csv`) with IC/ICIR, annual return, Sharpe, max drawdown, turnover, benchmark delta, and fee assumptions used.
+- [ ] **P1 · M** Add transaction-cost sensitivity presets (`low/base/high`) and output side-by-side delta table.
+- [ ] **P1 · S** Add run manifest/index (`results/index.csv`) containing run id, run label, config hash, git SHA, python/package versions, date windows, and headline metrics.
+- [ ] **P1 · S** Parameterize experiment/run naming (remove hardcoded `lgbm_alpha158`) and include run labels in artifact paths.
+- [ ] **P1 · S** Add benchmark block (SPY buy/hold + equal-weight baseline) in same report path for immediate relative judgment.
 
-- [ ] **P3 · L** Add lightweight dashboard notebook for run history and metric drift.
+### P2 — Tech Debt + Maintainability
 
-## Discovery Notes
+- [ ] **P2 · L** Split `strategies/lgbm_alpha158.py` into focused modules (`validation.py`, `runner.py`, `artifacts.py`, `cli.py`) to reduce monolith coupling.
+- [ ] **P2 · M** Expand tests for semantic date validation, dry-run behavior, override non-mutation, recorder fallback, and metric edge paths (`std=0`, missing columns).
+- [ ] **P2 · M** Pin/lock full dependency set (not only `pyqlib`) and document reproducible env setup for local + notebook workflows.
+- [ ] **P2 · M** Add CI quality gates (`ruff`, `black`, unit tests, smoke CLI run) with fail-fast checks on PRs.
+- [ ] **P2 · S** Add runtime portability guardrails (`num_threads` sanity vs host CPU; warn/auto-cap when oversized).
 
-- Gaps: no tests/validation, no reproducible artifact output contract.
-- Polish: docs mention old filename; limited onboarding guardrails.
-- Depth: no baseline comparisons/walk-forward presets.
-- Delight: no experiment template/report snapshots.
-- Infra: no CI/linting.
-- Growth: sharable dashboard/report exports missing.
+### P3 — Growth Ideas
+
+- [ ] **P3 · M** Add experiment template notebook with hypothesis/result/decision sections and artifact export hook.
+- [ ] **P3 · L** Add lightweight performance-drift notebook using run index history.
+- [ ] **P3 · L** Add multi-strategy scaffold/interface so additional models reuse the same evaluation/reporting pipeline.
+- [ ] **P3 · M** Add one-command tear-sheet export for review sharing.
+
+## Discovery Notes (2026-03-09, 18:04 UTC)
+
+- Core validation is still structural; semantic timeline bugs remain the highest-cost failure mode.
+- Runner still assumes recorder artifacts exist; this is the biggest source of brittle operator experience.
+- `ICIR = mean/std` is currently unguarded and can emit inf/NaN or fail presentation quality.
+- `_apply_overrides` mutates input config in place; this is subtle tech debt that can leak state across flows/tests.
+- Comparability has improved via artifact export, but run-to-run decision velocity is still blocked by missing consolidated report + run index + baseline block.
+- `num_threads: 20` in config remains a portability rough edge on smaller hosts and notebooks.

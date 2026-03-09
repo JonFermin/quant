@@ -28,7 +28,7 @@ This is a quantitative trading research repo. We write strategy code locally in 
 ├── setup.ipynb               # Colab setup notebook (install deps, download data, mount drive)
 ├── strategies/               # our strategy code — the actual work
 │   ├── __init__.py
-│   └── example_lgbm.py       # example: LightGBM alpha strategy
+│   └── lgbm_alpha158.py      # LightGBM alpha strategy
 ├── notebooks/                # Colab experiment notebooks
 │   └── 01_first_backtest.ipynb
 ├── configs/                  # QLib YAML workflow configs
